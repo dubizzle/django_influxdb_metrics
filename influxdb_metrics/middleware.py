@@ -13,8 +13,12 @@ from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
 
 from .loader import write_points
 
+try:
+      from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+      MiddlewareMixin = object
 
-class InfluxDBRequestMiddleware(object):
+class InfluxDBRequestMiddleware(MiddlewareMixin):
     """
     Measures request time and sends metric to InfluxDB.
 
