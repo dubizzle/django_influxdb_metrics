@@ -54,7 +54,7 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
             is_authenticated = False
             is_staff = False
             is_superuser = False
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 is_authenticated = True
                 if request.user.is_staff:
                     is_staff = True
