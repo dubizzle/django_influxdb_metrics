@@ -1,6 +1,7 @@
 """Middlewares for the influxdb_metrics app."""
 import inspect
 import time
+
 try:
     from urllib import parse
 except ImportError:
@@ -12,11 +13,13 @@ from tld import get_tld
 from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
 
 from .loader import write_points
+from .utils import is_ajax
 
 try:
-      from django.utils.deprecation import MiddlewareMixin
+    from django.utils.deprecation import MiddlewareMixin
 except ImportError:
-      MiddlewareMixin = object
+    MiddlewareMixin = object
+
 
 class InfluxDBRequestMiddleware(MiddlewareMixin):
     """
@@ -25,6 +28,7 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
     Credits go to: https://github.com/andymckay/django-statsd/blob/master/django_statsd/middleware.py#L24  # NOQA
 
     """
+
     def process_view(self, request, view_func, view_args, view_kwargs):
         view = view_func
         if not inspect.isfunction(view_func):
@@ -46,7 +50,7 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
     def _record_time(self, request):
         if hasattr(request, '_start_time'):
             ms = int((time.time() - request._start_time) * 1000)
-            if request.is_ajax():
+            if is_ajax(request):
                 is_ajax = True
             else:
                 is_ajax = False

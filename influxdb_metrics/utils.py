@@ -64,3 +64,7 @@ def process_points(client, data):  # pragma: no cover
             logger.error(err)
         else:
             raise err
+
+
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH', '') == 'XMLHttpRequest'
