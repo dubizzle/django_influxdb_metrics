@@ -13,7 +13,7 @@ from tld import get_tld
 from tld.exceptions import TldBadUrl, TldDomainNotFound, TldIOError
 
 from .loader import write_points
-from .utils import is_ajax
+from .utils import is_ajax as check_if_is_ajax
 
 try:
     from django.utils.deprecation import MiddlewareMixin
@@ -50,7 +50,7 @@ class InfluxDBRequestMiddleware(MiddlewareMixin):
     def _record_time(self, request):
         if hasattr(request, '_start_time'):
             ms = int((time.time() - request._start_time) * 1000)
-            if is_ajax(request):
+            if check_if_is_ajax(request):
                 is_ajax = True
             else:
                 is_ajax = False
