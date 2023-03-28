@@ -1,4 +1,5 @@
 """Tests for the utils module of the influxdb_metrics app."""
+from django.http import HttpRequest
 from django.test import TestCase
 
 from mock import patch
@@ -61,3 +62,14 @@ class WritePointsTestCase(TestCase):
             result = utils.write_points([])
             self.assertEqual(result, None, msg=(
                 'If setting is set, should return immediately'))
+
+
+class TestIsAjax(TestCase):
+    def test_ajax_request(self):
+        request = HttpRequest()
+        request.META['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'
+        self.assertTrue(is_ajax(request))
+
+    def test_non_ajax_request(self):
+        request = HttpRequest()
+        self.assertFalse(is_ajax(request))
